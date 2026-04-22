@@ -1,7 +1,6 @@
-<<<<<<< HEAD
 # Shelter Management DB
 
-This project is a MySQL database system for managing animal shelters.
+This project is a MySQL database system for managing animal shelters and application processes.
 
 ## Files
 - shelter_management_db.sql → database structure and data
@@ -12,5 +11,3 @@ This project is a MySQL database system for managing animal shelters.
 3. Run all queries
 
 =======
-# shelter_management_db
->>>>>>> e30374857c7b9e8f2e34c135b50655499015168f
