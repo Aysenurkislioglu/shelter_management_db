@@ -108,7 +108,7 @@ header {
 .header-reset:hover { background: rgba(255,255,255,.35); }
 
 /* ── Layout ────────────────────────────────────────────────────────── */
-#app { display: flex; flex: 1; overflow: hidden; }
+#app { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
 
 /* ── Sidebar ───────────────────────────────────────────────────────── */
 .sidebar {
