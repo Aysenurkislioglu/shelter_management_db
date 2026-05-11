@@ -8,7 +8,7 @@
   <link rel="icon" href="assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
 
@@ -102,47 +102,61 @@
 
       <!-- Welcome screen -->
       <div id="welcome">
-        <div class="welcome-icon-row">
-          <span class="wi-icon" style="--wc:#FF7043"><i data-lucide="database"></i></span>
-          <span class="wi-icon" style="--wc:#26C6DA"><i data-lucide="filter"></i></span>
-          <span class="wi-icon" style="--wc:#AB47BC"><i data-lucide="arrow-up-down"></i></span>
-          <span class="wi-icon" style="--wc:#66BB6A"><i data-lucide="bar-chart-2"></i></span>
-          <span class="wi-icon" style="--wc:#5C7CFA"><i data-lucide="git-merge"></i></span>
-          <span class="wi-icon" style="--wc:#FFB300"><i data-lucide="award"></i></span>
+
+        <!-- Floating paw prints (background decoration) -->
+        <div class="ws-bg" aria-hidden="true">
+          <span class="ws-paw" style="--d:0s;--x:8%;--s:.65;--r:-25deg"><i data-lucide="paw-print"></i></span>
+          <span class="ws-paw" style="--d:2.2s;--x:20%;--s:.45;--r:14deg"><i data-lucide="paw-print"></i></span>
+          <span class="ws-paw" style="--d:4s;--x:37%;--s:.8;--r:-42deg"><i data-lucide="paw-print"></i></span>
+          <span class="ws-paw" style="--d:1s;--x:53%;--s:.55;--r:20deg"><i data-lucide="paw-print"></i></span>
+          <span class="ws-paw" style="--d:3.2s;--x:68%;--s:.7;--r:-14deg"><i data-lucide="paw-print"></i></span>
+          <span class="ws-paw" style="--d:5s;--x:82%;--s:.5;--r:33deg"><i data-lucide="paw-print"></i></span>
+          <span class="ws-paw" style="--d:1.8s;--x:93%;--s:.75;--r:-36deg"><i data-lucide="paw-print"></i></span>
         </div>
-        <h1>Welcome to Happy Paws!</h1>
-        <p>
-          You're a new volunteer at <strong>PawShelter</strong> — a rescue organisation with
-          shelters in Istanbul, Ankara, and Izmir. Your mission: help the shelter run better
-          by writing <strong>SQL queries</strong> to answer real questions about our animals,
-          staff, and adoptions.
-        </p>
-        <div class="welcome-features">
-          <div class="feature-card">
-            <span class="icon"><i data-lucide="layers"></i></span>
-            15 missions<br>across 6 levels
+
+        <!-- Hero section (dark) -->
+        <div class="ws-hero">
+          <div class="ws-logo-ring">
+            <img src="assets/logo.png" alt="Happy Paws" class="ws-logo-img">
           </div>
-          <div class="feature-card">
-            <span class="icon"><i data-lucide="database"></i></span>
-            Real database with<br>21 shelter pets
+          <h1 class="ws-title">Happy Paws</h1>
+          <p class="ws-subtitle">Learn SQL · Save Animals · Earn Badges</p>
+
+          <!-- 6 level chips -->
+          <div class="ws-levels-row">
+            <div class="ws-lvl" style="--lc:#FF7043"><i data-lucide="database"></i><span>Basics</span></div>
+            <div class="ws-lvl" style="--lc:#26C6DA"><i data-lucide="filter"></i><span>Filter</span></div>
+            <div class="ws-lvl" style="--lc:#AB47BC"><i data-lucide="arrow-up-down"></i><span>Sort</span></div>
+            <div class="ws-lvl" style="--lc:#66BB6A"><i data-lucide="bar-chart-2"></i><span>Count</span></div>
+            <div class="ws-lvl" style="--lc:#5C7CFA"><i data-lucide="git-merge"></i><span>Join</span></div>
+            <div class="ws-lvl" style="--lc:#FFB300"><i data-lucide="award"></i><span>Expert</span></div>
           </div>
-          <div class="feature-card">
-            <span class="icon"><i data-lucide="trophy"></i></span>
-            Earn badges &amp;<br>track progress
+        </div>
+
+        <!-- Join card (white, slides up from bottom) -->
+        <div class="ws-card">
+          <p class="ws-card-label"><i data-lucide="user"></i> What's your volunteer name?</p>
+          <div class="volunteer-input">
+            <i data-lucide="user" class="vol-icon"></i>
+            <input type="text" id="player-name" placeholder="Your name (optional)…" maxlength="28" autocomplete="off">
+          </div>
+          <button class="btn-start" id="start-btn">
+            <i data-lucide="play"></i> Start Adventure!
+          </button>
+          <div class="ws-stats-row">
+            <span><i data-lucide="layers"></i> 15 missions</span>
+            <span class="ws-dot">·</span>
+            <span><i data-lucide="database"></i> 21 pets</span>
+            <span class="ws-dot">·</span>
+            <span><i data-lucide="trophy"></i> 6 badges</span>
+          </div>
+          <div class="tip-box">
+            <i data-lucide="lightbulb" class="tip-icon"></i>
+            Press <strong>Ctrl + Enter</strong> (or <strong>Cmd + Enter</strong>) to run your query.
+            After <strong>3 wrong tries</strong> a Show Answer button appears.
           </div>
         </div>
-        <div class="volunteer-input">
-          <i data-lucide="user" class="vol-icon"></i>
-          <input type="text" id="player-name" placeholder="Your name (optional)…" maxlength="28" autocomplete="off">
-        </div>
-        <button class="btn-start" id="start-btn">
-          <i data-lucide="play"></i> Start Adventure!
-        </button>
-        <div class="tip-box">
-          <i data-lucide="lightbulb" class="tip-icon"></i>
-          Press <strong>Ctrl + Enter</strong> (or <strong>Cmd + Enter</strong>) to run your query.
-          After <strong>3 wrong tries</strong> a Show Answer button appears.
-        </div>
+
       </div>
 
       <!-- Challenge view -->
@@ -256,7 +270,7 @@
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
-<script src="js/challenges.js?v=6"></script>
-<script src="js/app.js?v=6"></script>
+<script src="js/challenges.js?v=7"></script>
+<script src="js/app.js?v=7"></script>
 </body>
 </html>
