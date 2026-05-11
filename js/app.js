@@ -830,6 +830,12 @@ async function boot() {
 
     updateSidebarBadges();
 
+    // Populate welcome screen pet characters
+    const wpl = document.getElementById('ws-pet-left');
+    const wpr = document.getElementById('ws-pet-right');
+    if (wpl) wpl.innerHTML = petDogSvg('#FF7043');
+    if (wpr) wpr.innerHTML = petCatSvg('#26C6DA');
+
     document.getElementById('sql-editor').addEventListener('keydown', e => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         e.preventDefault();

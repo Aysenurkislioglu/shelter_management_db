@@ -8,7 +8,7 @@
   <link rel="icon" href="assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
 
@@ -116,11 +116,31 @@
 
         <!-- Hero section (dark) -->
         <div class="ws-hero">
-          <div class="ws-logo-ring">
-            <img src="assets/logo.png" alt="Happy Paws" class="ws-logo-img">
+
+          <!-- Sparkle stars -->
+          <div class="ws-sparkles" aria-hidden="true">
+            <span class="ws-spark" style="--d:0s;  --x:12%; --y:18%"></span>
+            <span class="ws-spark" style="--d:.7s; --x:82%; --y:12%"></span>
+            <span class="ws-spark" style="--d:1.4s;--x:28%; --y:72%"></span>
+            <span class="ws-spark" style="--d:2.1s;--x:74%; --y:68%"></span>
+            <span class="ws-spark" style="--d:.35s;--x:50%; --y:8%"></span>
+            <span class="ws-spark" style="--d:1.8s;--x:91%; --y:42%"></span>
+            <span class="ws-spark" style="--d:2.6s;--x:6%;  --y:55%"></span>
+            <span class="ws-spark" style="--d:3s;  --x:60%; --y:30%"></span>
           </div>
-          <h1 class="ws-title">Happy Paws</h1>
-          <p class="ws-subtitle">Learn SQL · Save Animals · Earn Badges</p>
+
+          <!-- Pets + title row -->
+          <div class="ws-pets-row">
+            <div class="ws-pet-left" id="ws-pet-left"></div>
+            <div class="ws-title-block">
+              <div class="ws-icon-badge">
+                <i data-lucide="paw-print"></i>
+              </div>
+              <h1 class="ws-title">Happy Paws</h1>
+              <p class="ws-subtitle">Learn SQL · Save Animals · Earn Badges</p>
+            </div>
+            <div class="ws-pet-right" id="ws-pet-right"></div>
+          </div>
 
           <!-- 6 level chips -->
           <div class="ws-levels-row">
@@ -270,7 +290,7 @@
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
-<script src="js/challenges.js?v=7"></script>
-<script src="js/app.js?v=7"></script>
+<script src="js/challenges.js?v=8"></script>
+<script src="js/app.js?v=8"></script>
 </body>
 </html>
