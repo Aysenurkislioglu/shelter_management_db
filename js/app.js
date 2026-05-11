@@ -326,16 +326,6 @@ function showFinalScreen() {
   setTimeout(triggerConfetti, 400);
   updateMascot(`Congratulations, ${name}! You're a SQL Expert now! I'm so proud!`, 'celebrate');
   hideChallengePet();
-
-  // Donation panel
-  const score = totalScore(progress);
-  const tl = Math.floor(score / 100);
-  const maxScore = CHALLENGES.reduce((s, c) => s + c.points, 0);
-  const pct = Math.min(100, Math.round((score / maxScore) * 100));
-  const amountEl = document.getElementById('cert-donation-amount');
-  const barEl = document.getElementById('cert-donation-bar');
-  if (amountEl) amountEl.textContent = `${tl} TL`;
-  if (barEl) setTimeout(() => { barEl.style.width = pct + '%'; }, 100);
 }
 
 // ── All-game-complete check ────────────────────────────────────────────────

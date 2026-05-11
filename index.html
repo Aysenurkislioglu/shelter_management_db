@@ -8,7 +8,7 @@
   <link rel="icon" href="assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
 
@@ -279,32 +279,51 @@
 <!-- Final Certificate Screen -->
 <div id="final-screen" class="hidden">
   <div class="cert-wrap">
-    <div class="cert-trophy-icon"><i data-lucide="trophy"></i></div>
-    <h1 class="cert-title">SQL Expert Certificate</h1>
-    <div class="cert-org">Happy Paws Animal Shelter</div>
+    <!-- Decorative corner brackets -->
+    <div class="cert-corner tl"></div>
+    <div class="cert-corner tr"></div>
+    <div class="cert-corner bl"></div>
+    <div class="cert-corner br"></div>
+
+    <!-- Header band -->
+    <div class="cert-org-band">
+      <i data-lucide="paw-print"></i>
+      <span>Happy Paws Animal Shelter</span>
+      <i data-lucide="paw-print"></i>
+    </div>
+
+    <!-- Trophy seal -->
+    <div class="cert-seal">
+      <div class="cert-trophy-icon"><i data-lucide="trophy"></i></div>
+    </div>
+
+    <div class="cert-label-top">Certificate of Achievement</div>
+    <h1 class="cert-title">SQL Expert</h1>
+
     <div class="cert-hr"></div>
+
     <p class="cert-for">This certifies that</p>
     <h2 class="cert-player" id="cert-player">Volunteer</h2>
-    <p class="cert-body">has successfully completed all 15 SQL missions at PawShelter<br>and is officially a <strong>SQL Expert!</strong></p>
+    <p class="cert-body">has successfully completed all 15 SQL missions<br>at PawShelter and is officially a <strong>SQL Expert!</strong></p>
+
     <div class="cert-badges-grid" id="cert-badges-grid"></div>
+
     <div class="cert-score-row">
       <i data-lucide="star" class="cert-star"></i>
       Total Score: <strong id="cert-score">0</strong> points
     </div>
+
+    <!-- Donation — simplified -->
     <div class="cert-donation">
-      <div class="cert-donation-title">
-        <i data-lucide="heart"></i> Your Points, Real Impact
+      <div class="cert-donation-line">
+        <i data-lucide="heart"></i>
+        <span>100 pts = 1 TL donated · Support shelter animals</span>
       </div>
-      <div class="cert-donation-amount" id="cert-donation-amount">0 TL</div>
-      <div class="cert-donation-sub">donated to shelter animals in your name</div>
-      <div class="cert-donation-bar-wrap">
-        <div class="cert-donation-bar" id="cert-donation-bar"></div>
-      </div>
-      <div class="cert-donation-note">100 pts = 1 TL · Happy Paws partners with local shelters</div>
       <button class="btn-donate" id="donate-btn">
         <i data-lucide="heart"></i> Support Happy Paws
       </button>
     </div>
+
     <button class="btn-cert-close" id="cert-close-btn">
       <i data-lucide="sparkles"></i> Keep Exploring
     </button>
@@ -313,7 +332,7 @@
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
-<script src="js/challenges.js?v=11"></script>
-<script src="js/app.js?v=11"></script>
+<script src="js/challenges.js?v=12"></script>
+<script src="js/app.js?v=12"></script>
 </body>
 </html>
