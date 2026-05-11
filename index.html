@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PawSQL — Learn SQL at the Animal Shelter</title>
+  <meta name="description" content="An interactive SQL learning game set in an animal shelter. Write real SQL queries to help rescue pets find their forever homes!">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Loading screen -->
+<div id="loading">
+  <div class="paw-spin">🐾</div>
+  <p>Loading PawSQL…</p>
+</div>
+
+<!-- Main app (hidden until DB is ready) -->
+<div id="app" class="hidden">
+
+  <!-- Header -->
+  <header>
+    <div class="header-logo">🐾 PawSQL <span>— Learn SQL at the Shelter</span></div>
+    <div class="header-stats">
+      <div class="stat-chip">⭐ <span id="score-display">0</span> pts</div>
+      <div class="stat-chip">✅ <span id="progress-display">0/14</span></div>
+      <button class="header-reset" id="reset-btn" title="Reset all progress">↺ Reset</button>
+    </div>
+  </header>
+
+  <!-- Body -->
+  <div style="display:flex; flex:1; overflow:hidden;">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-inner" id="challenge-list"></div>
+
+      <!-- Schema reference -->
+      <div class="schema-toggle-btn" id="schema-toggle">📋 Schema Reference</div>
+      <div id="schema-panel" class="hidden">
+        <table>
+          <tr><th colspan="2">SHELTER</th></tr>
+          <tr><td><code>Shelter_id</code> PK</td><td>City, Food, Capacity</td></tr>
+          <tr><th colspan="2">PERSON</th></tr>
+          <tr><td><code>ID</code> PK</td><td>F_name, L_name, Gender, Phone_no, E_mail, Birth_date, Address</td></tr>
+          <tr><th colspan="2">STAFF</th></tr>
+          <tr><td><code>Staff_ID</code> → PERSON</td><td>Position, <code>Shelter_id</code> → SHELTER</td></tr>
+          <tr><th colspan="2">ADOPTER</th></tr>
+          <tr><td><code>Adopter_ID</code> → PERSON</td><td>Adoption_experience</td></tr>
+          <tr><th colspan="2">PET</th></tr>
+          <tr><td><code>Pet_id</code> PK</td><td>Pet_name, Birth_d, Sex, Species, Adoption_status, Arrival_date, Photo, <code>Shelter_id</code> → SHELTER</td></tr>
+          <tr><th colspan="2">APPLICATION</th></tr>
+          <tr><td><code>Application_id</code> PK</td><td>Application_date, Application_status, <code>Pet_id</code>, <code>Staff_ID</code>, <code>Adopter_ID</code></td></tr>
+          <tr><th colspan="2">ADOPTS</th></tr>
+          <tr><td><code>Pet_id</code> → PET</td><td><code>Adopter_ID</code>, Adoption_fee, Adoption_date</td></tr>
+          <tr><th colspan="2">MEDICAL_REPORT</th></tr>
+          <tr><td><code>Pet_id, Report_id</code> PK</td><td>Report_date, Treatments, Notes, Diagnosis</td></tr>
+          <tr><th colspan="2">Pet_Photos</th></tr>
+          <tr><td><code>photo_id</code> PK</td><td><code>pet_id</code>, photo_url</td></tr>
+        </table>
+        <div style="margin-top:10px; font-size:.68rem; color:#888; line-height:1.8;">
+          <strong>Adoption_status values:</strong> Available · Pending · Adopted<br>
+          <strong>Position values:</strong> Director · Veterinarian · Cleaner · Caretaker<br>
+          <strong>Sex values:</strong> M · F<br>
+          <strong>Shelters:</strong> 1=Istanbul · 2=Ankara · 3=Izmir
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content">
+
+      <!-- Welcome screen -->
+      <div id="welcome">
+        <div class="welcome-hero">🐾</div>
+        <h1>Welcome to PawSQL!</h1>
+        <p>
+          You're a new volunteer at <strong>PawShelter</strong> — a rescue organisation with
+          shelters in Istanbul, Ankara, and Izmir. Your mission: help the shelter run better
+          by writing <strong>SQL queries</strong> to answer real questions about our animals,
+          staff, and adoptions.
+        </p>
+        <div class="welcome-features">
+          <div class="feature-card">
+            <span class="icon">🏋️</span>
+            14 missions<br>across 6 levels
+          </div>
+          <div class="feature-card">
+            <span class="icon">🐕</span>
+            Real database with<br>21 shelter pets
+          </div>
+          <div class="feature-card">
+            <span class="icon">🏆</span>
+            Earn points &amp;<br>track progress
+          </div>
+        </div>
+        <button class="btn-start" id="start-btn">▶ Start Mission 1</button>
+        <div class="tip-box">
+          💡 Tip: Press <strong>Ctrl + Enter</strong> (or <strong>⌘ + Enter</strong>) to run your query quickly!
+        </div>
+      </div>
+
+      <!-- Challenge view (hidden until a challenge is selected) -->
+      <div id="challenge-view" class="hidden">
+
+        <!-- Meta -->
+        <div class="ch-meta">
+          <span class="ch-level-badge" id="ch-level"></span>
+          <span class="ch-pts-badge" id="ch-points"></span>
+        </div>
+
+        <!-- Title -->
+        <h2 id="ch-title"></h2>
+
+        <!-- Story -->
+        <div class="story-box" id="ch-story"></div>
+
+        <!-- Task -->
+        <div>
+          <div class="task-label">📝 Your Task</div>
+          <div class="task-box" id="ch-task"></div>
+        </div>
+
+        <!-- SQL Editor -->
+        <div class="editor-card">
+          <div class="editor-header">
+            <span class="editor-dot dot-r"></span>
+            <span class="editor-dot dot-y"></span>
+            <span class="editor-dot dot-g"></span>
+            <span style="margin-left:6px;">SQL Editor</span>
+          </div>
+          <textarea id="sql-editor" spellcheck="false" placeholder="-- Write your SQL query here…&#10;SELECT ..."></textarea>
+          <div class="editor-footer">
+            <button class="btn-run" id="run-btn">▶ Run Query</button>
+            <button class="btn-hint" id="hint-btn">💡 Hint</button>
+            <span class="shortcut-tip">Ctrl+Enter to run</span>
+          </div>
+        </div>
+
+        <!-- Hint -->
+        <div id="hint-box" class="hidden"></div>
+
+        <!-- Feedback -->
+        <div id="feedback" class="hidden"></div>
+
+        <!-- Results -->
+        <div id="results"></div>
+
+      </div><!-- /#challenge-view -->
+    </main>
+  </div>
+</div>
+
+<!-- Confetti canvas -->
+<canvas id="confetti-canvas" class="hidden"></canvas>
+
+<!-- sql.js (SQLite compiled to WebAssembly) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"
+  integrity="sha512-8mvFMHfnDhBwLnJn/1wDk+3Tv6EMhAR5EPL0qSCyJGMZ5h7FevKHuEkA0PV38nbFDeFNxMPsBdDh3s0bsb/3A=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="js/challenges.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
