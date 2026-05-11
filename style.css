@@ -435,7 +435,8 @@ header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 44px 24px 36px;
+  justify-content: center;
+  padding: 24px 24px 28px;
   text-align: center;
   flex: 1;
 }
