@@ -56,7 +56,17 @@
 
     <!-- Sidebar -->
     <aside class="sidebar">
+      <!-- Mascot -->
+      <div class="sidebar-mascot">
+        <div class="sm-avatar" id="mascot-avatar">🐕</div>
+        <div class="sm-bubble" id="mascot-bubble">
+          <p id="mascot-text">Hi! I'm <strong>Biscuit</strong> 🐾<br>Your shelter guide! Let's find these animals their forever homes!</p>
+        </div>
+      </div>
+      <!-- Journey map -->
       <div class="sidebar-inner" id="challenge-list"></div>
+      <!-- Earned badges -->
+      <div class="sidebar-badges" id="sidebar-badges"></div>
       <div class="schema-toggle-btn" id="schema-toggle">📋 Schema Reference</div>
       <div id="schema-panel" class="hidden">
         <table>
@@ -122,7 +132,11 @@
             Earn points &amp;<br>track progress
           </div>
         </div>
-        <button class="btn-start" id="start-btn">▶ Start Mission 1</button>
+        <div class="volunteer-input">
+          <span class="vol-label">👋 Sen kimsin?</span>
+          <input type="text" id="player-name" placeholder="Adını gir…" maxlength="28" autocomplete="off">
+        </div>
+        <button class="btn-start" id="start-btn">▶ Maceraya Başla!</button>
         <div class="tip-box">
           💡 Tip: Press <strong>Ctrl + Enter</strong> (or <strong>⌘ + Enter</strong>) to run your query!
           After <strong>3 wrong tries</strong> a hint button appears 👁
@@ -172,6 +186,40 @@
 </div>
 
 <canvas id="confetti-canvas" class="hidden"></canvas>
+
+<!-- Level Complete Modal -->
+<div id="level-complete-modal" class="lc-overlay hidden">
+  <div class="lc-box">
+    <div class="lc-mascot" id="lc-mascot">🐕</div>
+    <h2 class="lc-heading" id="lc-heading">Level Complete! 🎉</h2>
+    <div class="lc-badge-row">
+      <div class="lc-badge-icon" id="lc-badge-icon">🐾</div>
+      <div class="lc-badge-info">
+        <div class="lc-badge-unlocked">Badge Unlocked!</div>
+        <div class="lc-badge-name" id="lc-badge-name">Database Explorer</div>
+      </div>
+    </div>
+    <p class="lc-msg" id="lc-msg"></p>
+    <button class="btn-lc-next" id="lc-next-btn">Next Level →</button>
+  </div>
+</div>
+
+<!-- Final Certificate Screen -->
+<div id="final-screen" class="hidden">
+  <div class="cert-wrap">
+    <div class="cert-pets-row">🐶 🐱 🐾 🐈 🦮 🐩</div>
+    <div class="cert-trophy">🏆</div>
+    <h1 class="cert-title">SQL Expert Certificate</h1>
+    <div class="cert-org">Happy Paws Animal Shelter</div>
+    <div class="cert-hr"></div>
+    <p class="cert-for">Bu sertifika,</p>
+    <h2 class="cert-player" id="cert-player">Volunteer</h2>
+    <p class="cert-body">adlı gönüllünün PawShelter'daki<br>15 SQL görevini başarıyla tamamladığını<br>ve resmi olarak <strong>SQL Uzmanı</strong> olduğunu onaylar!</p>
+    <div class="cert-badges-grid" id="cert-badges-grid"></div>
+    <div class="cert-score-row">🌟 Toplam Puan: <strong id="cert-score">0</strong></div>
+    <button class="btn-cert-close" id="cert-close-btn">✨ Keşfetmeye Devam Et</button>
+  </div>
+</div>
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>

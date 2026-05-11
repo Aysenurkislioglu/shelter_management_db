@@ -198,6 +198,15 @@ INSERT INTO Pet_Photos (pet_id, photo_url) VALUES
 // ── State ──────────────────────────────────────────────────────────────────
 const LEVEL_COLORS = ['#FF7043','#26C6DA','#AB47BC','#66BB6A','#5C7CFA','#FFB300'];
 
+const LEVEL_BADGES = [
+  { icon: '🐾', name: 'Database Explorer',  color: '#FF7043' },
+  { icon: '🔍', name: 'Filter Master',       color: '#26C6DA' },
+  { icon: '⚡', name: 'Sort Wizard',          color: '#AB47BC' },
+  { icon: '📊', name: 'Number Cruncher',     color: '#66BB6A' },
+  { icon: '🔗', name: 'Data Connector',      color: '#5C7CFA' },
+  { icon: '🎓', name: 'SQL Expert',          color: '#FFB300' },
+];
+
 let db = null;
 let currentChallengeId = null;
 let hintShown = false;
@@ -212,6 +221,105 @@ function loadProgress() {
 }
 function saveProgress(progress) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+}
+
+// ── Player name ────────────────────────────────────────────────────────────
+function getPlayerName() {
+  return localStorage.getItem('pawsql_name') || 'Volunteer';
+}
+function savePlayerName(name) {
+  localStorage.setItem('pawsql_name', name.trim() || 'Volunteer');
+}
+
+// ── Mascot ─────────────────────────────────────────────────────────────────
+function updateMascot(text, mood = 'normal') {
+  const textEl  = document.getElementById('mascot-text');
+  const bubble  = document.getElementById('mascot-bubble');
+  const avatar  = document.getElementById('mascot-avatar');
+  if (!textEl) return;
+  textEl.innerHTML = text;
+  bubble.className = `sm-bubble mood-${mood}`;
+  const avatars = { normal:'🐕', happy:'🐶', celebrate:'🎉', think:'🤔', sad:'😟' };
+  avatar.textContent = avatars[mood] || '🐕';
+}
+
+// ── Sidebar badges ─────────────────────────────────────────────────────────
+function updateSidebarBadges() {
+  const el = document.getElementById('sidebar-badges');
+  if (!el) return;
+  const progress = loadProgress();
+  const earned = LEVEL_BADGES.filter((_, i) => {
+    const lv = i + 1;
+    return CHALLENGES.filter(c => c.level === lv).every(c => progress[c.id]?.completed);
+  });
+  if (earned.length === 0) { el.innerHTML = ''; return; }
+  el.innerHTML = `<div class="sb-label">🏅 Kazanılan Rozetler</div>
+    <div class="sb-row">${earned.map((b, i) =>
+      `<span class="sb-badge" title="${b.name}" style="animation-delay:${i*0.08}s">${b.icon}</span>`
+    ).join('')}</div>`;
+}
+
+// ── Level Complete Modal ────────────────────────────────────────────────────
+function showLevelComplete(levelNum) {
+  const badge  = LEVEL_BADGES[levelNum - 1];
+  const isLast = levelNum >= 6;
+  const name   = getPlayerName();
+
+  document.getElementById('lc-badge-icon').textContent = badge.icon;
+  document.getElementById('lc-badge-name').textContent = badge.name;
+  document.getElementById('lc-mascot').textContent     = isLast ? '🏆' : '🐕';
+  document.getElementById('lc-heading').textContent    = isLast
+    ? '🎓 Tüm Görevler Tamam!'
+    : `Level ${levelNum} Tamamlandı! 🎉`;
+  document.getElementById('lc-msg').textContent = isLast
+    ? `Tebrikler ${name}! Resmi olarak SQL Uzmanısın! Biscuit çok gurur duyuyor! 🐕🏆`
+    : `Harika iş ${name}! "${badge.name}" rozetini kazandın! Biscuit sana bayılıyor! 🐕`;
+
+  const nextBtn = document.getElementById('lc-next-btn');
+  if (isLast) {
+    nextBtn.textContent = '🏆 Sertifikamı Al!';
+    nextBtn.onclick = () => {
+      document.getElementById('level-complete-modal').classList.add('hidden');
+      showFinalScreen();
+    };
+  } else {
+    const nextBadge = LEVEL_BADGES[levelNum];
+    nextBtn.textContent = `Level ${levelNum + 1}'e Geç: ${nextBadge.icon} ${nextBadge.name} →`;
+    nextBtn.onclick = () => {
+      document.getElementById('level-complete-modal').classList.add('hidden');
+      expandedLevel = levelNum + 1;
+      renderSidebar();
+      updateMascot(`Level ${levelNum + 1} açıldı! Hadi devam edelim! 🚀`, 'happy');
+    };
+  }
+
+  document.getElementById('level-complete-modal').classList.remove('hidden');
+  triggerConfetti();
+  updateSidebarBadges();
+}
+
+// ── Final Certificate ──────────────────────────────────────────────────────
+function showFinalScreen() {
+  const progress = loadProgress();
+  const name = getPlayerName();
+  document.getElementById('cert-player').textContent = name;
+  document.getElementById('cert-score').textContent  = totalScore(progress);
+
+  document.getElementById('cert-badges-grid').innerHTML = LEVEL_BADGES.map(b =>
+    `<div class="cert-badge-item">
+       <span class="cert-badge-emoji">${b.icon}</span>
+       <span class="cert-badge-label">${b.name}</span>
+     </div>`
+  ).join('');
+
+  document.getElementById('final-screen').classList.remove('hidden');
+  setTimeout(triggerConfetti, 400);
+  updateMascot(`${name}, sen artık bir SQL Uzmanısın! 🎓 Çok gurur duyuyorum!`, 'celebrate');
+}
+
+// ── All-game-complete check ────────────────────────────────────────────────
+function checkAllComplete(progress) {
+  return CHALLENGES.every(c => progress[c.id]?.completed);
 }
 
 // ── DB Init ────────────────────────────────────────────────────────────────
@@ -409,6 +517,10 @@ function selectChallenge(id) {
   document.getElementById('show-answer-btn').classList.add('hidden');
   attemptCounts[id] = 0;
 
+  // Mascot speaks the mission intro
+  const snippet = ch.story.replace(/<[^>]+>/g, '').slice(0, 90).trimEnd();
+  updateMascot(`${snippet}… 📋`, 'normal');
+
   const editor = document.getElementById('sql-editor');
   if (done && progress[id].lastQuery) {
     editor.value = progress[id].lastQuery;
@@ -488,13 +600,7 @@ function autoAdvance(completedId) {
   const levelChs = CHALLENGES.filter(c => c.level === completedCh.level);
   const levelDone = levelChs.every(c => progress[c.id]?.completed);
   if (levelDone) {
-    const nextLevel = completedCh.level + 1;
-    if (CHALLENGES.some(c => c.level === nextLevel)) {
-      setTimeout(() => {
-        expandedLevel = nextLevel;
-        renderSidebar();
-      }, 900);
-    }
+    setTimeout(() => showLevelComplete(completedCh.level), 1100);
     return;
   }
 
@@ -518,6 +624,13 @@ function showFeedback(correct, msg, pts, alreadyDone) {
   const icon = correct ? '🎉' : '🤔';
   box.innerHTML = `<div class="feedback-inner">${icon} <span>${msg}</span>${ptsBadge}</div>`;
   box.classList.remove('hidden');
+
+  if (correct) {
+    const name = getPlayerName();
+    updateMascot(`Vay be ${name}! 🎉 ${msg}`, 'celebrate');
+  } else {
+    updateMascot('Hmm, tam değil… 🤔 Tekrar dene, yapabilirsin!', 'think');
+  }
 }
 
 // ── Hint ───────────────────────────────────────────────────────────────────
@@ -588,11 +701,14 @@ function triggerConfetti() {
 
 // ── Reset ──────────────────────────────────────────────────────────────────
 function resetProgress() {
-  if (!confirm('Reset all progress? This cannot be undone!')) return;
+  if (!confirm('Tüm ilerlemeyi sıfırla? Bu işlem geri alınamaz!')) return;
   localStorage.removeItem(STORAGE_KEY);
   currentChallengeId = null;
+  expandedLevel = 1;
   document.getElementById('welcome').classList.remove('hidden');
   document.getElementById('challenge-view').classList.add('hidden');
+  updateMascot('Yeniden başlıyoruz! 🐾 Seni bu sefer daha hızlı görmeyi umuyorum!', 'happy');
+  updateSidebarBadges();
   renderSidebar();
 }
 
@@ -605,12 +721,28 @@ async function boot() {
     document.getElementById('app').classList.remove('hidden');
     renderSidebar();
 
+    // Restore saved name into input
+    const savedName = localStorage.getItem('pawsql_name') || '';
+    const nameInput = document.getElementById('player-name');
+    if (nameInput) nameInput.value = savedName;
+
     document.getElementById('run-btn').addEventListener('click', handleRun);
     document.getElementById('hint-btn').addEventListener('click', handleHint);
     document.getElementById('show-answer-btn').addEventListener('click', handleShowAnswer);
     document.getElementById('reset-btn').addEventListener('click', resetProgress);
-    document.getElementById('start-btn').addEventListener('click', () => selectChallenge(1));
+    document.getElementById('start-btn').addEventListener('click', () => {
+      const n = (document.getElementById('player-name')?.value || '').trim();
+      if (n) savePlayerName(n);
+      const name = getPlayerName();
+      updateMascot(`Hoş geldin ${name}! 🐾 Haydi ilk göreve başlayalım!`, 'happy');
+      selectChallenge(1);
+    });
     document.getElementById('schema-toggle').addEventListener('click', toggleSchema);
+    document.getElementById('cert-close-btn')?.addEventListener('click', () => {
+      document.getElementById('final-screen').classList.add('hidden');
+    });
+
+    updateSidebarBadges();
 
     document.getElementById('sql-editor').addEventListener('keydown', e => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
