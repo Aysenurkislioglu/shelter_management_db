@@ -264,8 +264,7 @@ function renderCell(cell) {
   if (cell === null) return '<span class="null">NULL</span>';
   const s = String(cell);
   if (isPhotoUrl(s)) {
-    const safe = escapeHtml(s);
-    return `<a href="${safe}" target="_blank" class="photo-link">📷 View Photo</a>`;
+    return `<a href="${escapeHtml(s)}" target="_blank" class="photo-link">📷 View Photo</a>`;
   }
   return escapeHtml(s);
 }
