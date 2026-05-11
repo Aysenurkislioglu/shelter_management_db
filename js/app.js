@@ -199,13 +199,15 @@ INSERT INTO Pet_Photos (pet_id, photo_url) VALUES
 const LEVEL_COLORS = ['#FF7043','#26C6DA','#AB47BC','#66BB6A','#5C7CFA','#FFB300'];
 
 const LEVEL_BADGES = [
-  { icon: '🐾', name: 'Database Explorer',  color: '#FF7043' },
-  { icon: '🔍', name: 'Filter Master',       color: '#26C6DA' },
-  { icon: '⚡', name: 'Sort Wizard',          color: '#AB47BC' },
-  { icon: '📊', name: 'Number Cruncher',     color: '#66BB6A' },
-  { icon: '🔗', name: 'Data Connector',      color: '#5C7CFA' },
-  { icon: '🎓', name: 'SQL Expert',          color: '#FFB300' },
+  { icon: 'database',      name: 'Database Explorer', color: '#FF7043' },
+  { icon: 'filter',        name: 'Filter Master',     color: '#26C6DA' },
+  { icon: 'arrow-up-down', name: 'Sort Wizard',       color: '#AB47BC' },
+  { icon: 'bar-chart-2',   name: 'Number Cruncher',   color: '#66BB6A' },
+  { icon: 'git-merge',     name: 'Data Connector',    color: '#5C7CFA' },
+  { icon: 'award',         name: 'SQL Expert',        color: '#FFB300' },
 ];
+
+const LEVEL_ICONS = ['database','filter','arrow-up-down','bar-chart-2','git-merge','award'];
 
 let db = null;
 let currentChallengeId = null;
@@ -233,14 +235,13 @@ function savePlayerName(name) {
 
 // ── Mascot ─────────────────────────────────────────────────────────────────
 function updateMascot(text, mood = 'normal') {
-  const textEl  = document.getElementById('mascot-text');
-  const bubble  = document.getElementById('mascot-bubble');
-  const avatar  = document.getElementById('mascot-avatar');
+  const textEl = document.getElementById('mascot-text');
+  const bubble = document.getElementById('mascot-bubble');
+  const avatar = document.getElementById('mascot-avatar');
   if (!textEl) return;
   textEl.innerHTML = text;
   bubble.className = `sm-bubble mood-${mood}`;
-  const avatars = { normal:'🐕', happy:'🐶', celebrate:'🎉', think:'🤔', sad:'😟' };
-  avatar.textContent = avatars[mood] || '🐕';
+  if (avatar) avatar.className = `sm-avatar mood-${mood}`;
 }
 
 // ── Sidebar badges ─────────────────────────────────────────────────────────
@@ -253,10 +254,13 @@ function updateSidebarBadges() {
     return CHALLENGES.filter(c => c.level === lv).every(c => progress[c.id]?.completed);
   });
   if (earned.length === 0) { el.innerHTML = ''; return; }
-  el.innerHTML = `<div class="sb-label">🏅 Kazanılan Rozetler</div>
+  el.innerHTML = `<div class="sb-label">Badges Earned</div>
     <div class="sb-row">${earned.map((b, i) =>
-      `<span class="sb-badge" title="${b.name}" style="animation-delay:${i*0.08}s">${b.icon}</span>`
+      `<span class="sb-badge" title="${b.name}" style="animation-delay:${i*0.08}s;color:${b.color}">
+        <i data-lucide="${b.icon}"></i>
+      </span>`
     ).join('')}</div>`;
+  if (window.lucide) lucide.createIcons();
 }
 
 // ── Level Complete Modal ────────────────────────────────────────────────────
@@ -265,35 +269,38 @@ function showLevelComplete(levelNum) {
   const isLast = levelNum >= 6;
   const name   = getPlayerName();
 
-  document.getElementById('lc-badge-icon').textContent = badge.icon;
+  document.getElementById('lc-badge-icon').innerHTML = `<i data-lucide="${badge.icon}"></i>`;
   document.getElementById('lc-badge-name').textContent = badge.name;
-  document.getElementById('lc-mascot').textContent     = isLast ? '🏆' : '🐕';
-  document.getElementById('lc-heading').textContent    = isLast
-    ? '🎓 Tüm Görevler Tamam!'
-    : `Level ${levelNum} Tamamlandı! 🎉`;
+  document.getElementById('lc-mascot-icon').innerHTML  = isLast
+    ? `<i data-lucide="trophy"></i>`
+    : `<i data-lucide="award"></i>`;
+  document.getElementById('lc-heading').textContent = isLast
+    ? 'All Missions Complete!'
+    : `Level ${levelNum} Complete!`;
   document.getElementById('lc-msg').textContent = isLast
-    ? `Tebrikler ${name}! Resmi olarak SQL Uzmanısın! Biscuit çok gurur duyuyor! 🐕🏆`
-    : `Harika iş ${name}! "${badge.name}" rozetini kazandın! Biscuit sana bayılıyor! 🐕`;
+    ? `Amazing work, ${name}! You're officially a SQL Expert! Biscuit is so proud!`
+    : `Great job, ${name}! You unlocked the "${badge.name}" badge. Keep going!`;
 
   const nextBtn = document.getElementById('lc-next-btn');
   if (isLast) {
-    nextBtn.textContent = '🏆 Sertifikamı Al!';
+    nextBtn.textContent = 'Claim Your Certificate!';
     nextBtn.onclick = () => {
       document.getElementById('level-complete-modal').classList.add('hidden');
       showFinalScreen();
     };
   } else {
     const nextBadge = LEVEL_BADGES[levelNum];
-    nextBtn.textContent = `Level ${levelNum + 1}'e Geç: ${nextBadge.icon} ${nextBadge.name} →`;
+    nextBtn.textContent = `Next: Level ${levelNum + 1} — ${nextBadge.name} →`;
     nextBtn.onclick = () => {
       document.getElementById('level-complete-modal').classList.add('hidden');
       expandedLevel = levelNum + 1;
       renderSidebar();
-      updateMascot(`Level ${levelNum + 1} açıldı! Hadi devam edelim! 🚀`, 'happy');
+      updateMascot(`Level ${levelNum + 1} unlocked! Let's keep going!`, 'happy');
     };
   }
 
   document.getElementById('level-complete-modal').classList.remove('hidden');
+  if (window.lucide) lucide.createIcons();
   triggerConfetti();
   updateSidebarBadges();
 }
@@ -305,16 +312,19 @@ function showFinalScreen() {
   document.getElementById('cert-player').textContent = name;
   document.getElementById('cert-score').textContent  = totalScore(progress);
 
-  document.getElementById('cert-badges-grid').innerHTML = LEVEL_BADGES.map(b =>
-    `<div class="cert-badge-item">
-       <span class="cert-badge-emoji">${b.icon}</span>
+  document.getElementById('cert-badges-grid').innerHTML = LEVEL_BADGES.map((b, i) =>
+    `<div class="cert-badge-item" style="--bc:${b.color};animation-delay:${i*0.1}s">
+       <span class="cert-badge-emoji" style="background:linear-gradient(135deg,${b.color},${b.color}CC)">
+         <i data-lucide="${b.icon}"></i>
+       </span>
        <span class="cert-badge-label">${b.name}</span>
      </div>`
   ).join('');
 
   document.getElementById('final-screen').classList.remove('hidden');
+  if (window.lucide) lucide.createIcons();
   setTimeout(triggerConfetti, 400);
-  updateMascot(`${name}, sen artık bir SQL Uzmanısın! 🎓 Çok gurur duyuyorum!`, 'celebrate');
+  updateMascot(`Congratulations, ${name}! You're a SQL Expert now! I'm so proud!`, 'celebrate');
 }
 
 // ── All-game-complete check ────────────────────────────────────────────────
@@ -447,9 +457,9 @@ function renderSidebar() {
     const cls = ['journey-node', unlocked ? 'unlocked' : 'locked', complete ? 'complete' : '', isExp ? 'expanded' : ''].filter(Boolean).join(' ');
 
     let dot;
-    if (!unlocked)        dot = `<i data-lucide="lock"></i>`;
-    else if (complete)    dot = `<i data-lucide="check"></i>`;
-    else                  dot = `<span>${info.levelEmoji}</span>`;
+    if (!unlocked)     dot = `<i data-lucide="lock"></i>`;
+    else if (complete) dot = `<i data-lucide="check"></i>`;
+    else               dot = `<i data-lucide="${LEVEL_ICONS[levelNum - 1] || 'database'}"></i>`;
 
     html += `
       <div class="${cls}" style="--lcolor:${color}" onclick="${unlocked ? `toggleLevel(${levelNum})` : ''}">
@@ -461,7 +471,7 @@ function renderSidebar() {
         <div class="jn-card">
           <div class="jn-info">
             <div class="jn-title">${shortName}</div>
-            <div class="jn-sub">${unlocked ? `${doneCount}/${total} missions` : '🔒 Complete previous level'}</div>
+            <div class="jn-sub">${unlocked ? `${doneCount}/${total} missions` : 'Complete previous level'}</div>
           </div>
           ${unlocked ? `<span class="jn-chevron"><i data-lucide="chevron-down"></i></span>` : ''}
         </div>
@@ -627,9 +637,9 @@ function showFeedback(correct, msg, pts, alreadyDone) {
 
   if (correct) {
     const name = getPlayerName();
-    updateMascot(`Vay be ${name}! 🎉 ${msg}`, 'celebrate');
+    updateMascot(`Well done, ${name}! ${msg}`, 'celebrate');
   } else {
-    updateMascot('Hmm, tam değil… 🤔 Tekrar dene, yapabilirsin!', 'think');
+    updateMascot("Hmm, not quite right… Try again — you've got this!", 'think');
   }
 }
 
@@ -701,13 +711,13 @@ function triggerConfetti() {
 
 // ── Reset ──────────────────────────────────────────────────────────────────
 function resetProgress() {
-  if (!confirm('Tüm ilerlemeyi sıfırla? Bu işlem geri alınamaz!')) return;
+  if (!confirm('Reset all progress? This cannot be undone!')) return;
   localStorage.removeItem(STORAGE_KEY);
   currentChallengeId = null;
   expandedLevel = 1;
   document.getElementById('welcome').classList.remove('hidden');
   document.getElementById('challenge-view').classList.add('hidden');
-  updateMascot('Yeniden başlıyoruz! 🐾 Seni bu sefer daha hızlı görmeyi umuyorum!', 'happy');
+  updateMascot("Starting fresh! Let's do this again!", 'happy');
   updateSidebarBadges();
   renderSidebar();
 }
@@ -734,7 +744,7 @@ async function boot() {
       const n = (document.getElementById('player-name')?.value || '').trim();
       if (n) savePlayerName(n);
       const name = getPlayerName();
-      updateMascot(`Hoş geldin ${name}! 🐾 Haydi ilk göreve başlayalım!`, 'happy');
+      updateMascot(`Welcome, ${name}! Let's start your first mission!`, 'happy');
       selectChallenge(1);
     });
     document.getElementById('schema-toggle').addEventListener('click', toggleSchema);

@@ -5,32 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Happy Paws — Learn SQL at the Animal Shelter</title>
   <meta name="description" content="An interactive SQL learning game set in an animal shelter. Write real SQL queries to help rescue pets find their forever homes!">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+  <link rel="icon" href="assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 
-<!-- Floating background pets -->
-<div class="bg-pets" aria-hidden="true">
-  <span style="left:4%;animation-duration:18s;animation-delay:0s">🐾</span>
-  <span style="left:12%;animation-duration:22s;animation-delay:-4s">🐱</span>
-  <span style="left:22%;animation-duration:16s;animation-delay:-8s">🐾</span>
-  <span style="left:33%;animation-duration:25s;animation-delay:-2s">🐶</span>
-  <span style="left:44%;animation-duration:19s;animation-delay:-12s">🐾</span>
-  <span style="left:55%;animation-duration:21s;animation-delay:-6s">🐱</span>
-  <span style="left:65%;animation-duration:17s;animation-delay:-1s">🐾</span>
-  <span style="left:74%;animation-duration:23s;animation-delay:-9s">🐶</span>
-  <span style="left:83%;animation-duration:20s;animation-delay:-3s">🐾</span>
-  <span style="left:92%;animation-duration:15s;animation-delay:-7s">🐱</span>
-</div>
+<!-- Subtle dot pattern background -->
+<div class="bg-pattern" aria-hidden="true"></div>
 
 <!-- Loading screen -->
 <div id="loading">
-  <div class="loading-mascot">
-    <span class="mascot-bounce">🐶</span>
-    <span class="mascot-bounce" style="animation-delay:.2s">🐱</span>
+  <div class="loading-logo">
+    <img src="assets/logo.png" alt="Happy Paws">
   </div>
   <div class="loading-bar"><div class="loading-fill"></div></div>
   <p>Loading Happy Paws…</p>
@@ -42,13 +30,21 @@
   <!-- Header -->
   <header>
     <div class="header-logo">
-      <img src="assets/logo.png" alt="Happy Paws Logo" onerror="this.style.display='none'">
+      <img src="assets/logo.png" alt="Happy Paws Logo">
       Happy Paws <span>— Learn SQL at the Shelter</span>
     </div>
     <div class="header-stats">
-      <div class="stat-chip">⭐ <span id="score-display">0</span> pts</div>
-      <div class="stat-chip">✅ <span id="progress-display">0/15</span></div>
-      <button class="header-reset" id="reset-btn" title="Reset all progress">↺ Reset</button>
+      <div class="stat-chip">
+        <i data-lucide="star" class="chip-icon"></i>
+        <span id="score-display">0</span> pts
+      </div>
+      <div class="stat-chip">
+        <i data-lucide="check-circle" class="chip-icon"></i>
+        <span id="progress-display">0/15</span>
+      </div>
+      <button class="header-reset" id="reset-btn" title="Reset all progress">
+        <i data-lucide="rotate-ccw"></i> Reset
+      </button>
     </div>
   </header>
 
@@ -58,16 +54,20 @@
     <aside class="sidebar">
       <!-- Mascot -->
       <div class="sidebar-mascot">
-        <div class="sm-avatar" id="mascot-avatar">🐕</div>
+        <div class="sm-avatar" id="mascot-avatar">
+          <i data-lucide="paw-print"></i>
+        </div>
         <div class="sm-bubble" id="mascot-bubble">
-          <p id="mascot-text">Hi! I'm <strong>Biscuit</strong> 🐾<br>Your shelter guide! Let's find these animals their forever homes!</p>
+          <p id="mascot-text">Hi! I'm <strong>Biscuit</strong>, your shelter guide!<br>Let's find these animals their forever homes!</p>
         </div>
       </div>
       <!-- Journey map -->
       <div class="sidebar-inner" id="challenge-list"></div>
       <!-- Earned badges -->
       <div class="sidebar-badges" id="sidebar-badges"></div>
-      <div class="schema-toggle-btn" id="schema-toggle">📋 Schema Reference</div>
+      <div class="schema-toggle-btn" id="schema-toggle">
+        <i data-lucide="table-2"></i> Schema Reference
+      </div>
       <div id="schema-panel" class="hidden">
         <table>
           <tr><th colspan="2">SHELTER</th></tr>
@@ -102,14 +102,13 @@
 
       <!-- Welcome screen -->
       <div id="welcome">
-        <div class="welcome-pets-parade">
-          <span class="parade-pet" style="animation-delay:0s">🐶</span>
-          <span class="parade-pet" style="animation-delay:.15s">🐱</span>
-          <span class="parade-pet" style="animation-delay:.3s">🐾</span>
-          <span class="parade-pet" style="animation-delay:.45s">🐈</span>
-          <span class="parade-pet" style="animation-delay:.6s">🦮</span>
-          <span class="parade-pet" style="animation-delay:.75s">🐾</span>
-          <span class="parade-pet" style="animation-delay:.9s">🐩</span>
+        <div class="welcome-icon-row">
+          <span class="wi-icon" style="--wc:#FF7043"><i data-lucide="database"></i></span>
+          <span class="wi-icon" style="--wc:#26C6DA"><i data-lucide="filter"></i></span>
+          <span class="wi-icon" style="--wc:#AB47BC"><i data-lucide="arrow-up-down"></i></span>
+          <span class="wi-icon" style="--wc:#66BB6A"><i data-lucide="bar-chart-2"></i></span>
+          <span class="wi-icon" style="--wc:#5C7CFA"><i data-lucide="git-merge"></i></span>
+          <span class="wi-icon" style="--wc:#FFB300"><i data-lucide="award"></i></span>
         </div>
         <h1>Welcome to Happy Paws!</h1>
         <p>
@@ -120,26 +119,29 @@
         </p>
         <div class="welcome-features">
           <div class="feature-card">
-            <span class="icon">🏋️</span>
+            <span class="icon"><i data-lucide="layers"></i></span>
             15 missions<br>across 6 levels
           </div>
           <div class="feature-card">
-            <span class="icon">🐕</span>
+            <span class="icon"><i data-lucide="database"></i></span>
             Real database with<br>21 shelter pets
           </div>
           <div class="feature-card">
-            <span class="icon">🏆</span>
-            Earn points &amp;<br>track progress
+            <span class="icon"><i data-lucide="trophy"></i></span>
+            Earn badges &amp;<br>track progress
           </div>
         </div>
         <div class="volunteer-input">
-          <span class="vol-label">👋 Sen kimsin?</span>
-          <input type="text" id="player-name" placeholder="Adını gir…" maxlength="28" autocomplete="off">
+          <i data-lucide="user" class="vol-icon"></i>
+          <input type="text" id="player-name" placeholder="Your name (optional)…" maxlength="28" autocomplete="off">
         </div>
-        <button class="btn-start" id="start-btn">▶ Maceraya Başla!</button>
+        <button class="btn-start" id="start-btn">
+          <i data-lucide="play"></i> Start Adventure!
+        </button>
         <div class="tip-box">
-          💡 Tip: Press <strong>Ctrl + Enter</strong> (or <strong>⌘ + Enter</strong>) to run your query!
-          After <strong>3 wrong tries</strong> a hint button appears 👁
+          <i data-lucide="lightbulb" class="tip-icon"></i>
+          Press <strong>Ctrl + Enter</strong> (or <strong>Cmd + Enter</strong>) to run your query.
+          After <strong>3 wrong tries</strong> a Show Answer button appears.
         </div>
       </div>
 
@@ -156,7 +158,9 @@
         <div class="story-box" id="ch-story"></div>
 
         <div>
-          <div class="task-label">📝 Your Task</div>
+          <div class="task-label">
+            <i data-lucide="clipboard-list" class="task-icon"></i> Your Task
+          </div>
           <div class="task-box" id="ch-task"></div>
         </div>
 
@@ -169,9 +173,15 @@
           </div>
           <textarea id="sql-editor" spellcheck="false" placeholder="-- Write your SQL query here…&#10;SELECT ..."></textarea>
           <div class="editor-footer">
-            <button class="btn-run" id="run-btn">▶ Run Query</button>
-            <button class="btn-hint" id="hint-btn">💡 Hint</button>
-            <button class="btn-answer hidden" id="show-answer-btn">👁 Show Answer</button>
+            <button class="btn-run" id="run-btn">
+              <i data-lucide="play"></i> Run Query
+            </button>
+            <button class="btn-hint" id="hint-btn">
+              <i data-lucide="lightbulb"></i> Hint
+            </button>
+            <button class="btn-answer hidden" id="show-answer-btn">
+              <i data-lucide="eye"></i> Show Answer
+            </button>
             <span class="shortcut-tip">Ctrl+Enter to run</span>
           </div>
         </div>
@@ -190,10 +200,14 @@
 <!-- Level Complete Modal -->
 <div id="level-complete-modal" class="lc-overlay hidden">
   <div class="lc-box">
-    <div class="lc-mascot" id="lc-mascot">🐕</div>
-    <h2 class="lc-heading" id="lc-heading">Level Complete! 🎉</h2>
+    <div class="lc-mascot-icon" id="lc-mascot-icon">
+      <i data-lucide="award"></i>
+    </div>
+    <h2 class="lc-heading" id="lc-heading">Level Complete!</h2>
     <div class="lc-badge-row">
-      <div class="lc-badge-icon" id="lc-badge-icon">🐾</div>
+      <div class="lc-badge-icon" id="lc-badge-icon">
+        <i data-lucide="database"></i>
+      </div>
       <div class="lc-badge-info">
         <div class="lc-badge-unlocked">Badge Unlocked!</div>
         <div class="lc-badge-name" id="lc-badge-name">Database Explorer</div>
@@ -207,23 +221,27 @@
 <!-- Final Certificate Screen -->
 <div id="final-screen" class="hidden">
   <div class="cert-wrap">
-    <div class="cert-pets-row">🐶 🐱 🐾 🐈 🦮 🐩</div>
-    <div class="cert-trophy">🏆</div>
+    <div class="cert-trophy-icon"><i data-lucide="trophy"></i></div>
     <h1 class="cert-title">SQL Expert Certificate</h1>
     <div class="cert-org">Happy Paws Animal Shelter</div>
     <div class="cert-hr"></div>
-    <p class="cert-for">Bu sertifika,</p>
+    <p class="cert-for">This certifies that</p>
     <h2 class="cert-player" id="cert-player">Volunteer</h2>
-    <p class="cert-body">adlı gönüllünün PawShelter'daki<br>15 SQL görevini başarıyla tamamladığını<br>ve resmi olarak <strong>SQL Uzmanı</strong> olduğunu onaylar!</p>
+    <p class="cert-body">has successfully completed all 15 SQL missions at PawShelter<br>and is officially a <strong>SQL Expert!</strong></p>
     <div class="cert-badges-grid" id="cert-badges-grid"></div>
-    <div class="cert-score-row">🌟 Toplam Puan: <strong id="cert-score">0</strong></div>
-    <button class="btn-cert-close" id="cert-close-btn">✨ Keşfetmeye Devam Et</button>
+    <div class="cert-score-row">
+      <i data-lucide="star" class="cert-star"></i>
+      Total Score: <strong id="cert-score">0</strong> points
+    </div>
+    <button class="btn-cert-close" id="cert-close-btn">
+      <i data-lucide="sparkles"></i> Keep Exploring
+    </button>
   </div>
 </div>
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
-<script src="js/challenges.js?v=4"></script>
-<script src="js/app.js?v=4"></script>
+<script src="js/challenges.js?v=5"></script>
+<script src="js/app.js?v=5"></script>
 </body>
 </html>
