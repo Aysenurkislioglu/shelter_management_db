@@ -163,28 +163,105 @@ header {
 .sidebar-inner::-webkit-scrollbar { width: 3px; }
 .sidebar-inner::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-.level-group { margin-bottom: 6px; }
-.level-header {
-  font-size: .68rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: var(--muted);
-  padding: 10px 10px 4px;
+/* ── Journey Map ───────────────────────────────────────────────────── */
+.journey-node {
+  display: flex;
+  align-items: stretch;
+  cursor: pointer;
+  user-select: none;
 }
+.journey-node.locked { cursor: default; }
+
+.jn-track {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 44px;
+  flex-shrink: 0;
+}
+.jn-line {
+  width: 2px;
+  flex: 1;
+  min-height: 8px;
+  background: var(--border);
+}
+.jn-line.invis { visibility: hidden; }
+
+.jn-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1rem;
+  border: 2px solid #E0E0E0;
+  background: #F0F0F0;
+  color: #BDBDBD;
+  transition: transform .2s, box-shadow .2s;
+}
+.jn-dot svg { width: 16px; height: 16px; }
+.journey-node.unlocked .jn-dot {
+  background: var(--lcolor, var(--orange));
+  border-color: var(--lcolor, var(--orange));
+  color: #fff;
+  box-shadow: 0 3px 12px color-mix(in srgb, var(--lcolor, var(--orange)) 45%, transparent);
+}
+.journey-node.unlocked:not(.locked):hover .jn-dot { transform: scale(1.1); }
+.journey-node.complete .jn-dot {
+  background: var(--green);
+  border-color: var(--green-d);
+  box-shadow: 0 3px 10px rgba(102,187,106,.4);
+}
+
+.jn-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 10px 10px 6px;
+  min-height: 54px;
+}
+.jn-info { flex: 1; min-width: 0; }
+.jn-title {
+  font-size: .78rem;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.journey-node.locked .jn-title { color: var(--muted); }
+.jn-sub { font-size: .64rem; color: var(--muted); margin-top: 2px; font-weight: 700; }
+.journey-node.complete .jn-sub { color: var(--green-d); }
+
+.jn-chevron { flex-shrink: 0; color: var(--muted); transition: transform .2s; }
+.jn-chevron svg { width: 13px; height: 13px; }
+.journey-node.expanded .jn-chevron { transform: rotate(180deg); }
+
+.jn-challenges {
+  margin-left: 22px;
+  border-left: 2px solid var(--border);
+  padding: 2px 0 6px 10px;
+  margin-bottom: 4px;
+}
+
+/* challenge buttons inside journey */
 .challenge-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   width: 100%;
-  padding: 8px 10px;
+  padding: 7px 8px;
   border: none;
   background: transparent;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
   text-align: left;
   font-family: inherit;
-  font-size: .84rem;
+  font-size: .79rem;
   color: var(--text);
   transition: background .15s, transform .1s;
 }
@@ -194,11 +271,12 @@ header {
   color: var(--orange-d);
   box-shadow: 0 2px 8px rgba(255,112,67,.15);
 }
-.challenge-btn.done .ch-status { color: var(--green); }
+.challenge-btn.done .ch-icon { color: var(--green); }
 .challenge-btn.done .ch-title { color: var(--green-d); }
-.ch-status { font-size: .85rem; flex-shrink: 0; width: 18px; text-align: center; }
-.ch-title  { flex: 1; font-weight: 700; line-height: 1.2; }
-.ch-pts    { font-size: .68rem; color: var(--muted); flex-shrink: 0; font-weight: 700; }
+.ch-icon { flex-shrink: 0; color: #CCC; }
+.ch-icon svg { width: 13px; height: 13px; }
+.ch-title { flex: 1; font-weight: 700; line-height: 1.2; min-width: 0; }
+.ch-pts   { font-size: .65rem; color: var(--muted); flex-shrink: 0; font-weight: 800; }
 
 .pulse { animation: pulse-anim .9s ease 4; }
 @keyframes pulse-anim {
@@ -336,14 +414,14 @@ header {
 
 .ch-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .ch-level-badge {
-  background: linear-gradient(135deg, var(--orange), #FF8A65);
+  background: var(--accent, var(--orange));
   color: #fff;
   font-size: .7rem; font-weight: 900;
   padding: 4px 12px;
   border-radius: 20px;
   text-transform: uppercase;
   letter-spacing: .05em;
-  box-shadow: 0 2px 8px rgba(255,112,67,.35);
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
 }
 .ch-pts-badge {
   background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
@@ -357,7 +435,7 @@ h2#ch-title { font-size: 1.45rem; font-weight: 900; color: var(--text); }
 
 .story-box {
   background: var(--card);
-  border-left: 4px solid var(--teal);
+  border-left: 4px solid var(--accent, var(--teal));
   border-radius: var(--radius);
   padding: 16px 20px;
   line-height: 1.75;
@@ -381,7 +459,7 @@ h2#ch-title { font-size: 1.45rem; font-weight: 900; color: var(--text); }
 }
 .task-box {
   background: linear-gradient(135deg, #FFF8F0, #FFF0E8);
-  border: 2px dashed var(--orange);
+  border: 2px dashed var(--accent, var(--orange));
   border-radius: var(--radius);
   padding: 14px 18px;
   line-height: 1.75;

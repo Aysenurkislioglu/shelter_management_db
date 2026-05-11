@@ -196,9 +196,12 @@ INSERT INTO Pet_Photos (pet_id, photo_url) VALUES
 `;
 
 // ── State ──────────────────────────────────────────────────────────────────
+const LEVEL_COLORS = ['#FF7043','#26C6DA','#AB47BC','#66BB6A','#5C7CFA','#FFB300'];
+
 let db = null;
 let currentChallengeId = null;
 let hintShown = false;
+let expandedLevel = 1;
 const attemptCounts = {};
 
 const STORAGE_KEY = 'pawsql_progress';
@@ -304,31 +307,72 @@ function completedCount(progress) {
   return Object.values(progress).filter(v => v.completed).length;
 }
 
+// ── Level locking ──────────────────────────────────────────────────────────
+function isLevelUnlocked(levelNum, progress) {
+  if (levelNum === 1) return true;
+  const prev = CHALLENGES.filter(c => c.level === levelNum - 1);
+  return prev.every(c => progress[c.id]?.completed);
+}
+
+function toggleLevel(levelNum) {
+  expandedLevel = expandedLevel === levelNum ? null : levelNum;
+  renderSidebar();
+}
+
 // ── Sidebar ────────────────────────────────────────────────────────────────
 function renderSidebar() {
   const progress = loadProgress();
-  const list = document.getElementById('challenge-list');
+  const levels = [...new Set(CHALLENGES.map(c => c.level))].sort((a, b) => a - b);
   let html = '';
-  let lastLevel = null;
 
-  CHALLENGES.forEach(ch => {
-    if (ch.level !== lastLevel) {
-      if (lastLevel !== null) html += '</div>';
-      html += `<div class="level-group">
-        <div class="level-header">${ch.levelEmoji} ${ch.levelName}</div>`;
-      lastLevel = ch.level;
-    }
-    const done = progress[ch.id]?.completed;
-    const active = ch.id === currentChallengeId;
-    html += `<button class="challenge-btn ${done ? 'done' : ''} ${active ? 'active' : ''}"
-      onclick="selectChallenge(${ch.id})">
-      <span class="ch-status">${done ? '✅' : '○'}</span>
-      <span class="ch-title">${ch.title}</span>
-      <span class="ch-pts">${ch.points}pt</span>
-    </button>`;
+  levels.forEach((levelNum, idx) => {
+    const levelChs = CHALLENGES.filter(c => c.level === levelNum);
+    const info = levelChs[0];
+    const unlocked = isLevelUnlocked(levelNum, progress);
+    const doneCount = levelChs.filter(c => progress[c.id]?.completed).length;
+    const total = levelChs.length;
+    const complete = doneCount === total;
+    const isExp = expandedLevel === levelNum;
+    const color = LEVEL_COLORS[levelNum - 1] || LEVEL_COLORS[0];
+    const shortName = info.levelName.includes('—') ? info.levelName.split('—')[1].trim() : info.levelName;
+
+    const cls = ['journey-node', unlocked ? 'unlocked' : 'locked', complete ? 'complete' : '', isExp ? 'expanded' : ''].filter(Boolean).join(' ');
+
+    let dot;
+    if (!unlocked)        dot = `<i data-lucide="lock"></i>`;
+    else if (complete)    dot = `<i data-lucide="check"></i>`;
+    else                  dot = `<span>${info.levelEmoji}</span>`;
+
+    html += `
+      <div class="${cls}" style="--lcolor:${color}" onclick="${unlocked ? `toggleLevel(${levelNum})` : ''}">
+        <div class="jn-track">
+          <div class="jn-line${idx === 0 ? ' invis' : ''}"></div>
+          <div class="jn-dot">${dot}</div>
+          <div class="jn-line${idx === levels.length - 1 ? ' invis' : ''}"></div>
+        </div>
+        <div class="jn-card">
+          <div class="jn-info">
+            <div class="jn-title">${shortName}</div>
+            <div class="jn-sub">${unlocked ? `${doneCount}/${total} missions` : '🔒 Complete previous level'}</div>
+          </div>
+          ${unlocked ? `<span class="jn-chevron"><i data-lucide="chevron-down"></i></span>` : ''}
+        </div>
+      </div>
+      ${isExp ? `<div class="jn-challenges">${levelChs.map(ch => {
+        const done = progress[ch.id]?.completed;
+        const active = ch.id === currentChallengeId;
+        return `<button class="challenge-btn ${done ? 'done' : ''} ${active ? 'active' : ''}"
+          onclick="event.stopPropagation();selectChallenge(${ch.id})">
+          <span class="ch-icon"><i data-lucide="${done ? 'check-circle-2' : 'circle'}"></i></span>
+          <span class="ch-title">${ch.title}</span>
+          <span class="ch-pts">${ch.points}pt</span>
+        </button>`;
+      }).join('')}</div>` : ''}
+    `;
   });
-  if (lastLevel !== null) html += '</div>';
-  list.innerHTML = html;
+
+  document.getElementById('challenge-list').innerHTML = html;
+  if (window.lucide) lucide.createIcons();
 
   document.getElementById('score-display').textContent = totalScore(progress);
   document.getElementById('progress-display').textContent =
@@ -337,10 +381,17 @@ function renderSidebar() {
 
 // ── Challenge view ─────────────────────────────────────────────────────────
 function selectChallenge(id) {
-  currentChallengeId = id;
-  hintShown = false;
   const ch = CHALLENGES.find(c => c.id === id);
   const progress = loadProgress();
+  if (!isLevelUnlocked(ch.level, progress)) return;
+
+  currentChallengeId = id;
+  hintShown = false;
+  expandedLevel = ch.level;
+
+  const accent = LEVEL_COLORS[ch.level - 1] || LEVEL_COLORS[0];
+  document.getElementById('challenge-view').style.setProperty('--accent', accent);
+
   const done = progress[id]?.completed;
 
   document.getElementById('welcome').classList.add('hidden');
@@ -430,13 +481,30 @@ function handleRun() {
 }
 
 function autoAdvance(completedId) {
+  const completedCh = CHALLENGES.find(c => c.id === completedId);
+  const progress = loadProgress();
+
+  // Check if the whole level is now done → unlock + expand next level
+  const levelChs = CHALLENGES.filter(c => c.level === completedCh.level);
+  const levelDone = levelChs.every(c => progress[c.id]?.completed);
+  if (levelDone) {
+    const nextLevel = completedCh.level + 1;
+    if (CHALLENGES.some(c => c.level === nextLevel)) {
+      setTimeout(() => {
+        expandedLevel = nextLevel;
+        renderSidebar();
+      }, 900);
+    }
+    return;
+  }
+
+  // Otherwise pulse the next incomplete challenge in the same level
   const idx = CHALLENGES.findIndex(c => c.id === completedId);
   const next = CHALLENGES[idx + 1];
-  if (!next) return;
-  const progress = loadProgress();
+  if (!next || next.level !== completedCh.level) return;
   if (!progress[next.id]?.completed) {
     setTimeout(() => {
-      const btn = document.querySelector(`.challenge-btn[onclick="selectChallenge(${next.id})"]`);
+      const btn = document.querySelector(`.challenge-btn[onclick*="selectChallenge(${next.id})"]`);
       if (btn) btn.classList.add('pulse');
     }, 1500);
   }
