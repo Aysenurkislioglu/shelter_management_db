@@ -47,6 +47,23 @@ const CHALLENGES = [
     successMessage: "Perfect! The radio host has 21 pets to announce! 📻🎙️"
   },
 
+  // ── LEVEL 1 BONUS: Photo challenge ────────────────────────────────
+  {
+    id: 15,
+    level: 1,
+    levelName: 'Level 1 — Pawfect Basics',
+    levelEmoji: '🐾',
+    title: '📸 Find the Photos!',
+    story: "Our photographer just uploaded all the pet photos to the database. The shelter manager wants to see all the photos — can you pull them up? Run the query and watch the images appear in the results!",
+    task: 'Select <code>pet_id</code> and <code>photo_url</code> from the <code>Pet_Photos</code> table.',
+    hint: 'The table is called <code>Pet_Photos</code> (capital P). Select <code>pet_id</code> and <code>photo_url</code> columns.',
+    canonicalQuery: 'SELECT pet_id, photo_url FROM Pet_Photos',
+    validateType: 'rowCount',
+    expectedCount: 25,
+    points: 150,
+    successMessage: "All 25 photos loaded! Look at those adorable faces! 📸🐱🐶"
+  },
+
   // ── LEVEL 2: WHERE Filtering ───────────────────────────────────────
   {
     id: 4,

@@ -255,6 +255,24 @@ function validate(challenge, userResult) {
 }
 
 // ── Render helpers ─────────────────────────────────────────────────────────
+function isImageUrl(val) {
+  if (typeof val !== 'string') return false;
+  return /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(val) ||
+         val.includes('hizliresim.com');
+}
+
+function renderCell(cell) {
+  if (cell === null) return '<span class="null">NULL</span>';
+  const s = String(cell);
+  if (isImageUrl(s)) {
+    return `<a href="${escapeHtml(s)}" target="_blank" title="Open full image">
+      <img src="${escapeHtml(s)}" class="thumb"
+           onerror="this.parentElement.innerHTML='<span class=broken>⚠️ Image not found</span>'">
+    </a>`;
+  }
+  return escapeHtml(s);
+}
+
 function renderTable(result) {
   if (result.error) {
     return `<div class="sql-error"><span>❌ SQL Error:</span> ${escapeHtml(result.error)}</div>`;
@@ -269,9 +287,7 @@ function renderTable(result) {
   html += '</tr></thead><tbody>';
   result.values.slice(0, 200).forEach(row => {
     html += '<tr>';
-    row.forEach(cell => {
-      html += `<td>${cell === null ? '<span class="null">NULL</span>' : escapeHtml(String(cell))}</td>`;
-    });
+    row.forEach(cell => { html += `<td>${renderCell(cell)}</td>`; });
     html += '</tr>';
   });
   html += '</tbody></table></div>';
