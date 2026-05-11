@@ -8,7 +8,7 @@
   <link rel="icon" href="assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="style.css?v=9">
+  <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
 
@@ -229,7 +229,29 @@
   </div>
 </div>
 
-<div id="transition-overlay"></div>
+<div id="transition-overlay">
+  <!-- Floating paw prints -->
+  <span class="tr-paw" style="--x:6%;  --d:.05s;--dur:.7s;--r:-20deg;--sz:28px"><i data-lucide="paw-print"></i></span>
+  <span class="tr-paw" style="--x:18%; --d:.1s; --dur:.65s;--r:15deg; --sz:20px"><i data-lucide="paw-print"></i></span>
+  <span class="tr-paw" style="--x:32%; --d:.0s; --dur:.8s; --r:-35deg;--sz:34px"><i data-lucide="paw-print"></i></span>
+  <span class="tr-paw" style="--x:48%; --d:.12s;--dur:.6s; --r:10deg; --sz:22px"><i data-lucide="paw-print"></i></span>
+  <span class="tr-paw" style="--x:62%; --d:.04s;--dur:.75s;--r:-28deg;--sz:30px"><i data-lucide="paw-print"></i></span>
+  <span class="tr-paw" style="--x:76%; --d:.08s;--dur:.7s; --r:22deg; --sz:18px"><i data-lucide="paw-print"></i></span>
+  <span class="tr-paw" style="--x:88%; --d:.02s;--dur:.65s;--r:-12deg;--sz:26px"><i data-lucide="paw-print"></i></span>
+  <!-- Sparkling stars -->
+  <span class="tr-star" style="--x:15%; --y:25%;--d:.08s;--dur:.55s;--sz:8px"></span>
+  <span class="tr-star" style="--x:38%; --y:18%;--d:.15s;--dur:.5s; --sz:6px"></span>
+  <span class="tr-star" style="--x:60%; --y:30%;--d:.05s;--dur:.6s; --sz:10px"></span>
+  <span class="tr-star" style="--x:80%; --y:20%;--d:.12s;--dur:.5s; --sz:7px"></span>
+  <span class="tr-star" style="--x:25%; --y:65%;--d:.1s; --dur:.55s;--sz:9px"></span>
+  <span class="tr-star" style="--x:70%; --y:70%;--d:.07s;--dur:.6s; --sz:6px"></span>
+  <span class="tr-star" style="--x:50%; --y:55%;--d:.18s;--dur:.5s; --sz:8px"></span>
+  <!-- Center icon + label -->
+  <div class="tr-center">
+    <div class="tr-icon"><i data-lucide="paw-print"></i></div>
+    <div class="tr-text">Let's Go!</div>
+  </div>
+</div>
 <div id="ch-pet" class="ch-pet" aria-hidden="true"></div>
 <canvas id="confetti-canvas" class="hidden"></canvas>
 
@@ -291,7 +313,7 @@
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
-<script src="js/challenges.js?v=9"></script>
-<script src="js/app.js?v=9"></script>
+<script src="js/challenges.js?v=10"></script>
+<script src="js/app.js?v=10"></script>
 </body>
 </html>

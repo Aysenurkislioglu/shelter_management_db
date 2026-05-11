@@ -816,11 +816,18 @@ async function boot() {
       const name = getPlayerName();
       updateMascot(`Welcome, ${name}! Let's start your first mission!`, 'happy');
       const overlay = document.getElementById('transition-overlay');
+      // Reset animations so they replay on every click
+      overlay.querySelectorAll('.tr-paw,.tr-star,.tr-icon,.tr-text').forEach(el => {
+        el.style.animation = 'none';
+        void el.offsetWidth;
+        el.style.animation = '';
+      });
       overlay.classList.add('active');
+      if (window.lucide) lucide.createIcons({ el: overlay });
       setTimeout(() => {
         selectChallenge(1);
-        setTimeout(() => overlay.classList.remove('active'), 60);
-      }, 320);
+        setTimeout(() => overlay.classList.remove('active'), 80);
+      }, 700);
     });
     document.getElementById('schema-toggle').addEventListener('click', toggleSchema);
     document.getElementById('cert-close-btn')?.addEventListener('click', () => {
