@@ -129,13 +129,15 @@ header {
   border: 1.5px solid rgba(255,255,255,.4);
   color: #fff;
   border-radius: 20px;
-  padding: 5px 14px;
+  padding: 4px 10px;
   cursor: pointer;
-  font-size: .8rem;
+  font-size: .72rem;
   font-family: inherit;
-  font-weight: 800;
+  font-weight: 700;
   transition: background .2s;
+  display: flex; align-items: center; gap: 4px;
 }
+.header-reset svg { width: 12px; height: 12px; }
 .header-reset:hover { background: rgba(255,255,255,.35); }
 
 /* ── Layout ────────────────────────────────────────────────────────── */
@@ -728,9 +730,21 @@ h2#ch-title { font-size: 1.45rem; font-weight: 900; color: var(--text); }
   border-radius: var(--radius);
   padding: 14px 18px;
   line-height: 1.75;
+  margin-bottom: 18px;
 }
 
 /* ── Editor ────────────────────────────────────────────────────────── */
+#transition-overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(160deg, #1B0E35, #0D1B4A);
+  z-index: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .28s ease;
+}
+#transition-overlay.active { opacity: 1; pointer-events: all; }
+
 .editor-card {
   background: var(--card);
   border-radius: var(--radius);

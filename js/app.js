@@ -804,10 +804,7 @@ async function boot() {
     document.getElementById('app').classList.remove('hidden');
     renderSidebar();
 
-    // Restore saved name into input
-    const savedName = localStorage.getItem('pawsql_name') || '';
-    const nameInput = document.getElementById('player-name');
-    if (nameInput) nameInput.value = savedName;
+    // Keep name input empty on load (name stored separately, shown after start)
 
     document.getElementById('run-btn').addEventListener('click', handleRun);
     document.getElementById('hint-btn').addEventListener('click', handleHint);
@@ -818,7 +815,12 @@ async function boot() {
       if (n) savePlayerName(n);
       const name = getPlayerName();
       updateMascot(`Welcome, ${name}! Let's start your first mission!`, 'happy');
-      selectChallenge(1);
+      const overlay = document.getElementById('transition-overlay');
+      overlay.classList.add('active');
+      setTimeout(() => {
+        selectChallenge(1);
+        setTimeout(() => overlay.classList.remove('active'), 60);
+      }, 320);
     });
     document.getElementById('schema-toggle').addEventListener('click', toggleSchema);
     document.getElementById('cert-close-btn')?.addEventListener('click', () => {
