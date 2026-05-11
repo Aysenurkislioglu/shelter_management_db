@@ -643,6 +643,7 @@ h2#ch-title { font-size: 1.45rem; font-weight: 900; color: var(--text); }
   padding: 9px 18px; border-radius: 50px;
   font-weight: 900; font-size: .9rem;
   cursor: pointer; font-family: inherit;
+  display: flex; align-items: center; gap: 6px;
   transition: transform .08s, border-bottom-width .08s;
   box-shadow: 0 2px 0 #BF360C, 0 4px 10px rgba(255,167,38,.35);
 }
@@ -656,6 +657,7 @@ h2#ch-title { font-size: 1.45rem; font-weight: 900; color: var(--text); }
   padding: 9px 18px; border-radius: 50px;
   font-weight: 900; font-size: .9rem;
   cursor: pointer; font-family: inherit;
+  display: flex; align-items: center; gap: 6px;
   animation: answer-appear .4s ease both;
   transition: transform .08s, border-bottom-width .08s;
   box-shadow: 0 2px 0 #4A148C, 0 4px 10px rgba(142,36,170,.35);
@@ -980,6 +982,105 @@ code {
 }
 .btn-cert-close:hover { transform: translateY(-2px); }
 .btn-cert-close:active { border-bottom-width: 1px; transform: translateY(3px); }
+
+/* ── Pet character ──────────────────────────────────────────────────── */
+.ch-pet {
+  position: fixed;
+  bottom: 20px;
+  right: -160px;
+  width: 120px;
+  z-index: 100;
+  pointer-events: none;
+  transition: right .5s cubic-bezier(.175,.885,.32,1.275);
+  filter: drop-shadow(0 8px 20px rgba(0,0,0,.18));
+}
+.ch-pet.visible {
+  right: 20px;
+}
+.ch-pet svg {
+  width: 100%;
+  height: auto;
+  animation: pet-bob 2.4s ease-in-out infinite;
+}
+@keyframes pet-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  30%       { transform: translateY(-10px) rotate(-3deg); }
+  60%       { transform: translateY(-6px) rotate(2deg); }
+}
+
+/* ── Donation panel ─────────────────────────────────────────────────── */
+.cert-donation {
+  background: linear-gradient(135deg, #FFF0F5, #FFE0EC);
+  border: 2px solid #F48FB1;
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.cert-donation-title {
+  font-size: .78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #C2185B;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.cert-donation-title svg { width: 14px; height: 14px; }
+.cert-donation-amount {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #AD1457;
+  margin: 4px 0 6px;
+  line-height: 1;
+}
+.cert-donation-sub {
+  font-size: .75rem;
+  color: #880E4F;
+  margin-bottom: 12px;
+}
+.cert-donation-bar-wrap {
+  background: rgba(194,24,91,.12);
+  border-radius: 50px;
+  height: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.cert-donation-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #F48FB1, #E91E63, #C2185B);
+  border-radius: 50px;
+  width: 0%;
+  transition: width 1.8s cubic-bezier(.22,.61,.36,1) .4s;
+}
+.cert-donation-note {
+  font-size: .68rem;
+  color: #C2185B;
+  opacity: .7;
+}
+.btn-donate {
+  background: linear-gradient(160deg, #F48FB1, #E91E63);
+  color: #fff;
+  border: none;
+  border-bottom: 4px solid #880E4F;
+  padding: 10px 24px;
+  border-radius: 50px;
+  font-size: .88rem;
+  font-weight: 900;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform .08s, border-bottom-width .08s;
+  box-shadow: 0 3px 0 #880E4F, 0 6px 18px rgba(233,30,99,.3);
+  margin-top: 8px;
+}
+.btn-donate:hover { transform: translateY(-2px); }
+.btn-donate:active { border-bottom-width: 1px; transform: translateY(3px); }
 
 /* ── Responsive ────────────────────────────────────────────────────── */
 @media (max-width: 700px) {

@@ -8,7 +8,7 @@
   <link rel="icon" href="assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 
@@ -195,6 +195,7 @@
   </div>
 </div>
 
+<div id="ch-pet" class="ch-pet" aria-hidden="true"></div>
 <canvas id="confetti-canvas" class="hidden"></canvas>
 
 <!-- Level Complete Modal -->
@@ -233,6 +234,20 @@
       <i data-lucide="star" class="cert-star"></i>
       Total Score: <strong id="cert-score">0</strong> points
     </div>
+    <div class="cert-donation">
+      <div class="cert-donation-title">
+        <i data-lucide="heart"></i> Your Points, Real Impact
+      </div>
+      <div class="cert-donation-amount" id="cert-donation-amount">0 TL</div>
+      <div class="cert-donation-sub">donated to shelter animals in your name</div>
+      <div class="cert-donation-bar-wrap">
+        <div class="cert-donation-bar" id="cert-donation-bar"></div>
+      </div>
+      <div class="cert-donation-note">100 pts = 1 TL · Happy Paws partners with local shelters</div>
+      <button class="btn-donate" id="donate-btn">
+        <i data-lucide="heart"></i> Support Happy Paws
+      </button>
+    </div>
     <button class="btn-cert-close" id="cert-close-btn">
       <i data-lucide="sparkles"></i> Keep Exploring
     </button>
@@ -241,7 +256,7 @@
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
-<script src="js/challenges.js?v=5"></script>
-<script src="js/app.js?v=5"></script>
+<script src="js/challenges.js?v=6"></script>
+<script src="js/app.js?v=6"></script>
 </body>
 </html>

@@ -325,6 +325,17 @@ function showFinalScreen() {
   if (window.lucide) lucide.createIcons();
   setTimeout(triggerConfetti, 400);
   updateMascot(`Congratulations, ${name}! You're a SQL Expert now! I'm so proud!`, 'celebrate');
+  hideChallengePet();
+
+  // Donation panel
+  const score = totalScore(progress);
+  const tl = Math.floor(score / 100);
+  const maxScore = CHALLENGES.reduce((s, c) => s + c.points, 0);
+  const pct = Math.min(100, Math.round((score / maxScore) * 100));
+  const amountEl = document.getElementById('cert-donation-amount');
+  const barEl = document.getElementById('cert-donation-bar');
+  if (amountEl) amountEl.textContent = `${tl} TL`;
+  if (barEl) setTimeout(() => { barEl.style.width = pct + '%'; }, 100);
 }
 
 // ── All-game-complete check ────────────────────────────────────────────────
@@ -514,6 +525,7 @@ function selectChallenge(id) {
 
   document.getElementById('welcome').classList.add('hidden');
   document.getElementById('challenge-view').classList.remove('hidden');
+  updateChallengePet(ch.level);
 
   document.getElementById('ch-level').textContent = ch.levelName;
   document.getElementById('ch-title').textContent = ch.title;
@@ -709,6 +721,66 @@ function triggerConfetti() {
   draw();
 }
 
+// ── Pet character ──────────────────────────────────────────────────────────
+function petDogSvg(color) {
+  const dark = color + 'CC';
+  const light = color + '44';
+  return `<svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="50" cy="95" rx="28" ry="22" fill="${color}"/>
+    <circle cx="50" cy="52" r="26" fill="${color}"/>
+    <ellipse cx="25" cy="56" rx="11" ry="18" fill="${dark}" transform="rotate(-12 25 56)"/>
+    <ellipse cx="75" cy="56" rx="11" ry="18" fill="${dark}" transform="rotate(12 75 56)"/>
+    <ellipse cx="41" cy="49" rx="5" ry="5.5" fill="#1a1a1a"/>
+    <ellipse cx="59" cy="49" rx="5" ry="5.5" fill="#1a1a1a"/>
+    <circle cx="43" cy="47" r="1.8" fill="white"/>
+    <circle cx="61" cy="47" r="1.8" fill="white"/>
+    <ellipse cx="50" cy="62" rx="11" ry="8" fill="${light}" style="fill:white;opacity:.6"/>
+    <ellipse cx="50" cy="59" rx="5" ry="3.5" fill="#1a1a1a"/>
+    <path d="M44 65 Q50 70 56 65" stroke="#1a1a1a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M79 87 Q105 70 97 46" stroke="${color}" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <ellipse cx="35" cy="116" rx="11" ry="7" fill="${color}"/>
+    <ellipse cx="65" cy="116" rx="11" ry="7" fill="${color}"/>
+  </svg>`;
+}
+
+function petCatSvg(color) {
+  return `<svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="50" cy="95" rx="28" ry="22" fill="${color}"/>
+    <circle cx="50" cy="50" r="26" fill="${color}"/>
+    <polygon points="27,32 22,8 40,26" fill="${color}"/>
+    <polygon points="73,32 78,8 60,26" fill="${color}"/>
+    <polygon points="29,30 25,14 39,25" fill="#FFB3C1"/>
+    <polygon points="71,30 75,14 61,25" fill="#FFB3C1"/>
+    <ellipse cx="40" cy="48" rx="5" ry="6" fill="#1a1a1a"/>
+    <ellipse cx="60" cy="48" rx="5" ry="6" fill="#1a1a1a"/>
+    <circle cx="42" cy="46" r="1.8" fill="white"/>
+    <circle cx="62" cy="46" r="1.8" fill="white"/>
+    <ellipse cx="50" cy="58" rx="3" ry="2" fill="#FF6B9D"/>
+    <path d="M46 61 Q50 65 54 61" stroke="#1a1a1a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <line x1="18" y1="55" x2="40" y2="57" stroke="#1a1a1a" stroke-width="1" opacity=".5"/>
+    <line x1="18" y1="60" x2="40" y2="60" stroke="#1a1a1a" stroke-width="1" opacity=".5"/>
+    <line x1="82" y1="55" x2="60" y2="57" stroke="#1a1a1a" stroke-width="1" opacity=".5"/>
+    <line x1="82" y1="60" x2="60" y2="60" stroke="#1a1a1a" stroke-width="1" opacity=".5"/>
+    <path d="M78 85 Q108 65 96 38" stroke="${color}" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <ellipse cx="35" cy="116" rx="11" ry="7" fill="${color}"/>
+    <ellipse cx="65" cy="116" rx="11" ry="7" fill="${color}"/>
+  </svg>`;
+}
+
+function updateChallengePet(levelNum) {
+  const el = document.getElementById('ch-pet');
+  if (!el) return;
+  const color = LEVEL_COLORS[(levelNum - 1) % LEVEL_COLORS.length];
+  el.innerHTML = (levelNum % 2 === 0) ? petCatSvg(color) : petDogSvg(color);
+  el.classList.remove('visible');
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+}
+
+function hideChallengePet() {
+  const el = document.getElementById('ch-pet');
+  if (el) el.classList.remove('visible');
+}
+
 // ── Reset ──────────────────────────────────────────────────────────────────
 function resetProgress() {
   if (!confirm('Reset all progress? This cannot be undone!')) return;
@@ -717,6 +789,7 @@ function resetProgress() {
   expandedLevel = 1;
   document.getElementById('welcome').classList.remove('hidden');
   document.getElementById('challenge-view').classList.add('hidden');
+  hideChallengePet();
   updateMascot("Starting fresh! Let's do this again!", 'happy');
   updateSidebarBadges();
   renderSidebar();
@@ -750,6 +823,9 @@ async function boot() {
     document.getElementById('schema-toggle').addEventListener('click', toggleSchema);
     document.getElementById('cert-close-btn')?.addEventListener('click', () => {
       document.getElementById('final-screen').classList.add('hidden');
+    });
+    document.getElementById('donate-btn')?.addEventListener('click', () => {
+      alert('Thank you for your support! In a real version, this would redirect to our donation page. Every point counts for the animals!');
     });
 
     updateSidebarBadges();
