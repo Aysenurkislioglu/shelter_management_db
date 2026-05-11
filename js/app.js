@@ -199,6 +199,7 @@ INSERT INTO Pet_Photos (pet_id, photo_url) VALUES
 let db = null;
 let currentChallengeId = null;
 let hintShown = false;
+const attemptCounts = {};
 
 const STORAGE_KEY = 'pawsql_progress';
 
@@ -354,6 +355,8 @@ function selectChallenge(id) {
   document.getElementById('hint-box').innerHTML = '';
   document.getElementById('feedback').classList.add('hidden');
   document.getElementById('results').innerHTML = '';
+  document.getElementById('show-answer-btn').classList.add('hidden');
+  attemptCounts[id] = 0;
 
   const editor = document.getElementById('sql-editor');
   if (done && progress[id].lastQuery) {
@@ -397,6 +400,12 @@ function handleRun() {
     renderSidebar();
     autoAdvance(ch.id);
   } else {
+    if (!alreadyDone) {
+      attemptCounts[ch.id] = (attemptCounts[ch.id] || 0) + 1;
+      if (attemptCounts[ch.id] >= 3) {
+        document.getElementById('show-answer-btn').classList.remove('hidden');
+      }
+    }
     if (!result.error) {
       const got = result.values.length;
       let msg = 'Not quite right — check your query and try again!';
@@ -451,6 +460,16 @@ function handleHint() {
   box.innerHTML = `<div class="hint-inner">💡 <strong>Hint:</strong> ${ch.hint}</div>`;
   box.classList.remove('hidden');
   hintShown = true;
+}
+
+// ── Show Answer ────────────────────────────────────────────────────────────
+function handleShowAnswer() {
+  const ch = CHALLENGES.find(c => c.id === currentChallengeId);
+  if (!ch) return;
+  const editor = document.getElementById('sql-editor');
+  editor.value = ch.canonicalQuery;
+  editor.classList.add('answer-flash');
+  setTimeout(() => editor.classList.remove('answer-flash'), 600);
 }
 
 // ── Schema panel ───────────────────────────────────────────────────────────
@@ -520,6 +539,7 @@ async function boot() {
 
     document.getElementById('run-btn').addEventListener('click', handleRun);
     document.getElementById('hint-btn').addEventListener('click', handleHint);
+    document.getElementById('show-answer-btn').addEventListener('click', handleShowAnswer);
     document.getElementById('reset-btn').addEventListener('click', resetProgress);
     document.getElementById('start-btn').addEventListener('click', () => selectChallenge(1));
     document.getElementById('schema-toggle').addEventListener('click', toggleSchema);

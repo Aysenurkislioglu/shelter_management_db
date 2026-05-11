@@ -8,17 +8,35 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 
-<!-- Loading screen -->
-<div id="loading">
-  <div class="paw-spin">🐾</div>
-  <p>Loading PawSQL…</p>
+<!-- Floating background pets -->
+<div class="bg-pets" aria-hidden="true">
+  <span style="left:4%;animation-duration:18s;animation-delay:0s">🐾</span>
+  <span style="left:12%;animation-duration:22s;animation-delay:-4s">🐱</span>
+  <span style="left:22%;animation-duration:16s;animation-delay:-8s">🐾</span>
+  <span style="left:33%;animation-duration:25s;animation-delay:-2s">🐶</span>
+  <span style="left:44%;animation-duration:19s;animation-delay:-12s">🐾</span>
+  <span style="left:55%;animation-duration:21s;animation-delay:-6s">🐱</span>
+  <span style="left:65%;animation-duration:17s;animation-delay:-1s">🐾</span>
+  <span style="left:74%;animation-duration:23s;animation-delay:-9s">🐶</span>
+  <span style="left:83%;animation-duration:20s;animation-delay:-3s">🐾</span>
+  <span style="left:92%;animation-duration:15s;animation-delay:-7s">🐱</span>
 </div>
 
-<!-- Main app (hidden until DB is ready) -->
+<!-- Loading screen -->
+<div id="loading">
+  <div class="loading-mascot">
+    <span class="mascot-bounce">🐶</span>
+    <span class="mascot-bounce" style="animation-delay:.2s">🐱</span>
+  </div>
+  <div class="loading-bar"><div class="loading-fill"></div></div>
+  <p>Loading Happy Paws…</p>
+</div>
+
+<!-- Main app -->
 <div id="app" class="hidden">
 
   <!-- Header -->
@@ -29,19 +47,16 @@
     </div>
     <div class="header-stats">
       <div class="stat-chip">⭐ <span id="score-display">0</span> pts</div>
-      <div class="stat-chip">✅ <span id="progress-display">0/14</span></div>
+      <div class="stat-chip">✅ <span id="progress-display">0/15</span></div>
       <button class="header-reset" id="reset-btn" title="Reset all progress">↺ Reset</button>
     </div>
   </header>
 
-  <!-- Body -->
   <div style="display:flex; flex:1; overflow:hidden;">
 
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-inner" id="challenge-list"></div>
-
-      <!-- Schema reference -->
       <div class="schema-toggle-btn" id="schema-toggle">📋 Schema Reference</div>
       <div id="schema-panel" class="hidden">
         <table>
@@ -54,7 +69,7 @@
           <tr><th colspan="2">ADOPTER</th></tr>
           <tr><td><code>Adopter_ID</code> → PERSON</td><td>Adoption_experience</td></tr>
           <tr><th colspan="2">PET</th></tr>
-          <tr><td><code>Pet_id</code> PK</td><td>Pet_name, Birth_d, Sex, Species, Adoption_status, Arrival_date, Photo, <code>Shelter_id</code> → SHELTER</td></tr>
+          <tr><td><code>Pet_id</code> PK</td><td>Pet_name, Birth_d, Sex, Species, Adoption_status, Arrival_date, Photo, <code>Shelter_id</code></td></tr>
           <tr><th colspan="2">APPLICATION</th></tr>
           <tr><td><code>Application_id</code> PK</td><td>Application_date, Application_status, <code>Pet_id</code>, <code>Staff_ID</code>, <code>Adopter_ID</code></td></tr>
           <tr><th colspan="2">ADOPTS</th></tr>
@@ -64,11 +79,10 @@
           <tr><th colspan="2">Pet_Photos</th></tr>
           <tr><td><code>photo_id</code> PK</td><td><code>pet_id</code>, photo_url</td></tr>
         </table>
-        <div style="margin-top:10px; font-size:.68rem; color:#888; line-height:1.8;">
-          <strong>Adoption_status values:</strong> Available · Pending · Adopted<br>
-          <strong>Position values:</strong> Director · Veterinarian · Cleaner · Caretaker<br>
-          <strong>Sex values:</strong> M · F<br>
-          <strong>Shelters:</strong> 1=Istanbul · 2=Ankara · 3=Izmir
+        <div style="margin-top:10px;font-size:.68rem;color:#888;line-height:1.8;">
+          <strong>Adoption_status:</strong> Available · Pending · Adopted<br>
+          <strong>Position:</strong> Director · Veterinarian · Cleaner · Caretaker<br>
+          <strong>Sex:</strong> M · F &nbsp;|&nbsp; <strong>Shelters:</strong> 1=Istanbul · 2=Ankara · 3=Izmir
         </div>
       </div>
     </aside>
@@ -78,7 +92,15 @@
 
       <!-- Welcome screen -->
       <div id="welcome">
-        <div class="welcome-hero">🐾</div>
+        <div class="welcome-pets-parade">
+          <span class="parade-pet" style="animation-delay:0s">🐶</span>
+          <span class="parade-pet" style="animation-delay:.15s">🐱</span>
+          <span class="parade-pet" style="animation-delay:.3s">🐾</span>
+          <span class="parade-pet" style="animation-delay:.45s">🐈</span>
+          <span class="parade-pet" style="animation-delay:.6s">🦮</span>
+          <span class="parade-pet" style="animation-delay:.75s">🐾</span>
+          <span class="parade-pet" style="animation-delay:.9s">🐩</span>
+        </div>
         <h1>Welcome to Happy Paws!</h1>
         <p>
           You're a new volunteer at <strong>PawShelter</strong> — a rescue organisation with
@@ -89,7 +111,7 @@
         <div class="welcome-features">
           <div class="feature-card">
             <span class="icon">🏋️</span>
-            14 missions<br>across 6 levels
+            15 missions<br>across 6 levels
           </div>
           <div class="feature-card">
             <span class="icon">🐕</span>
@@ -102,32 +124,28 @@
         </div>
         <button class="btn-start" id="start-btn">▶ Start Mission 1</button>
         <div class="tip-box">
-          💡 Tip: Press <strong>Ctrl + Enter</strong> (or <strong>⌘ + Enter</strong>) to run your query quickly!
+          💡 Tip: Press <strong>Ctrl + Enter</strong> (or <strong>⌘ + Enter</strong>) to run your query!
+          After <strong>3 wrong tries</strong> a hint button appears 👁
         </div>
       </div>
 
-      <!-- Challenge view (hidden until a challenge is selected) -->
+      <!-- Challenge view -->
       <div id="challenge-view" class="hidden">
 
-        <!-- Meta -->
         <div class="ch-meta">
           <span class="ch-level-badge" id="ch-level"></span>
           <span class="ch-pts-badge" id="ch-points"></span>
         </div>
 
-        <!-- Title -->
         <h2 id="ch-title"></h2>
 
-        <!-- Story -->
         <div class="story-box" id="ch-story"></div>
 
-        <!-- Task -->
         <div>
           <div class="task-label">📝 Your Task</div>
           <div class="task-box" id="ch-task"></div>
         </div>
 
-        <!-- SQL Editor -->
         <div class="editor-card">
           <div class="editor-header">
             <span class="editor-dot dot-r"></span>
@@ -139,30 +157,24 @@
           <div class="editor-footer">
             <button class="btn-run" id="run-btn">▶ Run Query</button>
             <button class="btn-hint" id="hint-btn">💡 Hint</button>
+            <button class="btn-answer hidden" id="show-answer-btn">👁 Show Answer</button>
             <span class="shortcut-tip">Ctrl+Enter to run</span>
           </div>
         </div>
 
-        <!-- Hint -->
         <div id="hint-box" class="hidden"></div>
-
-        <!-- Feedback -->
         <div id="feedback" class="hidden"></div>
-
-        <!-- Results -->
         <div id="results"></div>
 
-      </div><!-- /#challenge-view -->
+      </div>
     </main>
   </div>
 </div>
 
-<!-- Confetti canvas -->
 <canvas id="confetti-canvas" class="hidden"></canvas>
 
-<!-- sql.js (SQLite compiled to WebAssembly) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
-<script src="js/challenges.js?v=2"></script>
-<script src="js/app.js?v=2"></script>
+<script src="js/challenges.js?v=3"></script>
+<script src="js/app.js?v=3"></script>
 </body>
 </html>
