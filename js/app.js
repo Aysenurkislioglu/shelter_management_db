@@ -255,20 +255,17 @@ function validate(challenge, userResult) {
 }
 
 // ── Render helpers ─────────────────────────────────────────────────────────
-function isImageUrl(val) {
+function isPhotoUrl(val) {
   if (typeof val !== 'string') return false;
-  return /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(val) ||
-         val.includes('hizliresim.com');
+  return val.startsWith('http://') || val.startsWith('https://');
 }
 
 function renderCell(cell) {
   if (cell === null) return '<span class="null">NULL</span>';
   const s = String(cell);
-  if (isImageUrl(s)) {
-    return `<a href="${escapeHtml(s)}" target="_blank" title="Open full image">
-      <img src="${escapeHtml(s)}" class="thumb"
-           onerror="this.parentElement.innerHTML='<span class=broken>⚠️ Image not found</span>'">
-    </a>`;
+  if (isPhotoUrl(s)) {
+    const safe = escapeHtml(s);
+    return `<a href="${safe}" target="_blank" class="photo-link">📷 View Photo</a>`;
   }
   return escapeHtml(s);
 }
